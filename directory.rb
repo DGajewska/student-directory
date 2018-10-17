@@ -1,3 +1,27 @@
+def interactive_menu
+  students = []
+  while true do
+    puts '1. Input students'
+    puts '2. List students'
+    puts '9. Exit'
+
+    selection = gets.chomp
+
+    case selection
+    when "1"
+      students = input_students
+    when "2"
+      print_header(students)
+      print(students)
+      print_footer(students)
+    when "9"
+      exit
+    else
+      puts "I don't know what you meant, try again"
+    end
+  end
+end
+
 def input_students
   months = ["January","February","March","April","May","June","July",
             "August","September","October","November","December"]
@@ -51,7 +75,4 @@ def print_footer(names)
   end
 end
 
-students = input_students
-print_header(students)
-print(students)
-print_footer(students)
+interactive_menu
