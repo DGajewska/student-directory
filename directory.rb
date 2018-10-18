@@ -25,9 +25,13 @@ def process(selection)
   when "2"
     list_students
   when "3"
-    save_students
+    puts 'Which file would you like to save the student list to?'
+    save_students(gets.chomp)
+    puts 'Student list saved successfully'
   when "4"
-    load_students
+    puts 'Which file would you like to load the student list from?'
+    load_students(gets.chomp)
+    puts 'Student list loaded successfully'
   when "9"
     exit
   else
@@ -103,9 +107,8 @@ def print_footer
   end
 end
 
-def save_students
-  file = File.open("students.csv", "w")
-
+def save_students(filename)
+  file = File.open(filename, "w")
   @students.each do |student|
     student_data = [student[:name], student[:cohort]]
     csv_line = student_data.join(",")
