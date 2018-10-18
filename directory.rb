@@ -1,4 +1,4 @@
-@months = ["January","February","March","April","May","June","July",
+$months = ["January","February","March","April","May","June","July",
           "August","September","October","November","December"]
 
 @students = []
@@ -36,24 +36,40 @@ def process(selection)
 end
 
 def input_students
+  while true do
+    name = get_student_name
+    name.empty? ? break : cohort = get_student_cohort
+    cohort.empty? ? break : add_student(name, cohort)
+  end
+  puts "Now we have #{@students.count} students"
+end
 
+def get_student_name
   puts 'Please enter the names of the students'
   puts 'To finish, just hit return twice'
-
   name = STDIN.gets.chomp
+end
 
-  while !name.empty? do
-
+def get_student_cohort
+  loop do
     puts 'Which cohort is this student in?'
     cohort = STDIN.gets.chomp.capitalize
-
-    @months.include?(cohort) ? @students << {name: name, cohort: cohort.to_sym} : next
-
-    puts "Now we have #{@students.count} students"
-
-    name = STDIN.gets.chomp
+   return cohort if $months.include?(cohort) || cohort.empty?
   end
+  cohort
+end
 
+def load_students(filename = "students.csv")
+  file = File.open(filename, "r")
+  file.readlines.each do |line|
+    name, cohort  = line.chomp.split(',')
+    add_student(name, cohort)
+  end
+file.close
+end
+
+def add_student(name, cohort)
+  @students << {name: name, cohort: cohort.to_sym}
 end
 
 def list_students
@@ -72,9 +88,7 @@ end
 def print_student_list
   @students.map{ |student| student[:cohort] }.uniq.each do |cohort|
     puts cohort
-      @students.each do |student|
-          puts student[:name] if student[:cohort] == cohort
-      end
+      @students.each { |student| puts student[:name] if student[:cohort] == cohort }
     puts ""
   end
 end
@@ -98,15 +112,6 @@ def save_students
     file.puts csv_line
   end
   file.close
-end
-
-def load_students(filename = "students.csv")
-  file = File.open(filename, "r")
-  file.readlines.each do |line|
-    name, cohort = line.chomp.split(',')
-    @students << {name: name, cohort: cohort.to_sym}
-  end
-file.close
 end
 
 def try_load_students
