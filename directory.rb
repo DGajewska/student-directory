@@ -1,3 +1,4 @@
+require 'csv'
 $months = ["January","February","March","April","May","June","July",
           "August","September","October","November","December"]
 
@@ -64,12 +65,12 @@ def get_student_cohort
 end
 
 def load_students(filename = "students.csv")
-  file = File.open(filename, "r")
-  file.readlines.each do |line|
-    name, cohort  = line.chomp.split(',')
-    add_student(name, cohort)
+  CSV.open(filename, "r") do |file|
+    file.each do |line|
+      name, cohort  = line
+      add_student(name, cohort)
+    end
   end
-file.close
 end
 
 def add_student(name, cohort)
@@ -108,13 +109,13 @@ def print_footer
 end
 
 def save_students(filename)
-  file = File.open(filename, "w")
-  @students.each do |student|
-    student_data = [student[:name], student[:cohort]]
-    csv_line = student_data.join(",")
-    file.puts csv_line
+  File.open(filename, "w") do |file|
+    @students.each do |student|
+      student_data = [student[:name], student[:cohort]]
+      csv_line = student_data.join(",")
+      file.puts csv_line
+    end
   end
-  file.close
 end
 
 def try_load_students
